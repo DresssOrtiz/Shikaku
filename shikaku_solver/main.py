@@ -55,6 +55,9 @@ def run_console_example():
 
     if solution is None:
         print("No solution was found for this board.")
+        print("\nStats:")
+        for k, v in solver.get_stats().items():
+            print(f"  {k}: {v}")
         return
 
     print("Rectangles found:")
@@ -64,7 +67,10 @@ def run_console_example():
     print("Solution matrix:")
     solution_matrix = build_solution_matrix(board, solution)
     print_solution_matrix(solution_matrix)
-
+    
+    print("\nStats:")
+    for k, v in solver.get_stats().items():
+        print(f"  {k}: {v}")
 
 def main():
     app = ShikakuGUI()

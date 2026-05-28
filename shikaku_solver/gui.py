@@ -121,15 +121,29 @@ class ShikakuGUI:
             messagebox.showinfo("Sin tablero", "Primero carga un ejemplo.")
             return
 
-        # Solver call: reuse the backtracking class from solver.py.
         solver = ShikakuSolver(self.board)
         solution = solver.solve()
+        stats = solver.get_stats()
 
         if solution is None:
-            messagebox.showinfo("Sin solución", "No se encontró solución para este tablero.")
+            messagebox.showinfo("Sin solución", f"No se encontró solución para este tablero.\n\nMétricas:\n{self._format_stats(stats)}")
             return
 
         self.draw_solution(solution)
+        messagebox.showinfo("Solución encontrada", f"¡Tablero resuelto exitosamente!\n\nMétricas:\n{self._format_stats(stats)}")
+
+    def _format_stats(self, stats):
+        return (
+            f"Tiempo: {stats['elapsed_ms']:.2f} ms\n"
+            f"Llamadas recursivas: {stats['recursive_calls']}\n"
+            f"Candidatos probados: {stats['candidates_tested']}\n"
+            f"Colocaciones: {stats['placements']}\n"
+            f"Backtracks: {stats['backtracks']}\n"
+            f"Rechazos por solapamiento: {stats['overlap_rejections']}\n"
+            f"Podas por forward checking: {stats['forward_prunes']}\n"
+            f"Podas por celdas imposibles: {stats['cell_prunes']}\n"
+            f"Profundidad máxima: {stats['max_depth']}"
+        )
 
     def show_decisions(self):
         self.stop_animation()
@@ -138,8 +152,8 @@ class ShikakuGUI:
             messagebox.showinfo("Sin tablero", "Primero carga un ejemplo.")
             return
 
-        solver = ShikakuSolver(self.board)
-        self.decision_steps = self.generate_decision_steps(solver)
+        self.current_solver = ShikakuSolver(self.board)
+        self.decision_steps = self.current_solver.solve_with_steps()
         self.play_next_step()
 
     def stop_animation(self):
@@ -150,97 +164,43 @@ class ShikakuGUI:
 
     def play_next_step(self):
         try:
-            step_type, partial_solution, rectangle = next(self.decision_steps)
+            step = next(self.decision_steps)
         except StopIteration:
             self.animation_job = None
             return
 
+        step_type = step["type"]
+        partial_solution = step["solution"]
+        rectangle = step.get("rectangle")
+        stats = step.get("stats", {})
+
         if step_type == "try":
             self.draw_partial_solution(partial_solution, rectangle, "blue")
-        elif step_type == "reject":
+        elif step_type == "reject_overlap":
             self.draw_partial_solution(partial_solution, rectangle, "red")
+        elif step_type == "reject_forward_check":
+            self.draw_partial_solution(partial_solution, rectangle, "purple")
+        elif step_type == "reject_uncoverable_cell":
+            self.draw_partial_solution(partial_solution, rectangle, "orange")
         elif step_type == "place":
             self.draw_partial_solution(partial_solution)
         elif step_type == "remove":
-            self.draw_partial_solution(partial_solution, rectangle, "orange")
+            self.draw_partial_solution(partial_solution, rectangle, "gray")
+        elif step_type == "dead_end":
+            pass
         elif step_type == "solution":
             self.draw_solution(partial_solution)
             self.animation_job = None
+            messagebox.showinfo("Solución encontrada", f"Animación finalizada.\n\nMétricas:\n{self._format_stats(stats)}")
             return
         elif step_type == "no_solution":
             self.draw_board()
-            messagebox.showinfo("Sin solución", "No se encontró solución para este tablero.")
+            messagebox.showinfo("Sin solución", f"Animación finalizada. No hay solución.\n\nMétricas:\n{self._format_stats(stats)}")
             self.animation_job = None
             return
 
         delay = self.speed_scale.get()
         self.animation_job = self.root.after(delay, self.play_next_step)
-
-    def generate_decision_steps(self, solver):
-        total_area = sum(value for _, _, value in solver.clues)
-        if total_area != solver.rows * solver.cols:
-            yield ("no_solution", [], None)
-            return
-
-        # Same pruning idea as the solver: start with the clue with fewer options.
-        ordered_clues = sorted(
-            solver.clues,
-            key=lambda clue: len(solver.candidates_by_clue[clue]),
-        )
-
-        if any(len(solver.candidates_by_clue[clue]) == 0 for clue in ordered_clues):
-            yield ("no_solution", [], None)
-            return
-
-        occupied = [[False for _ in range(solver.cols)] for _ in range(solver.rows)]
-        solution = []
-
-        solved = yield from self.backtracking_steps(
-            solver,
-            ordered_clues,
-            0,
-            occupied,
-            solution,
-        )
-
-        if solved:
-            yield ("solution", solution.copy(), None)
-        else:
-            yield ("no_solution", [], None)
-
-    def backtracking_steps(self, solver, ordered_clues, index, occupied, solution):
-        if index == len(ordered_clues):
-            return solver._all_cells_covered(occupied)
-
-        clue = ordered_clues[index]
-
-        for rectangle in solver.candidates_by_clue[clue]:
-            # Show the candidate before accepting or rejecting it.
-            yield ("try", solution.copy(), rectangle)
-
-            if solver._can_place(rectangle, occupied):
-                solver._place(rectangle, occupied, True)
-                solution.append(rectangle)
-                yield ("place", solution.copy(), None)
-
-                solved = yield from self.backtracking_steps(
-                    solver,
-                    ordered_clues,
-                    index + 1,
-                    occupied,
-                    solution,
-                )
-                if solved:
-                    return True
-
-                removed = solution.pop()
-                solver._place(removed, occupied, False)
-                yield ("remove", solution.copy(), removed)
-            else:
-                # Main pruning shown visually: red means overlap with occupied cells.
-                yield ("reject", solution.copy(), rectangle)
-
-        return False
 
     def draw_board(self):
         # Grid drawing: every cell starts white and clues are drawn on top.
