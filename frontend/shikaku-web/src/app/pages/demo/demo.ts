@@ -153,6 +153,28 @@ export class Demo implements OnInit, OnDestroy {
   }
 
   nextStep() {
+    if (this.steps.length === 0) {
+      this.resetState();
+      this.isLoading = true;
+      this.currentStepMessage = 'Calculando y descargando pasos...';
+      this.api.getSteps(this.currentBoard).subscribe({
+        next: (res) => {
+          this.steps = res.steps;
+          this.isLoading = false;
+          if (this.steps.length > 0) {
+            this.currentStepIndex = 0;
+            this.applyStep(this.steps[0]);
+          }
+        },
+        error: (err) => {
+          console.error("API Error loading steps:", err);
+          this.isLoading = false;
+          this.currentStepMessage = 'Error al generar los pasos.';
+        }
+      });
+      return;
+    }
+
     if (this.currentStepIndex < this.steps.length - 1) {
       this.currentStepIndex++;
       this.applyStep(this.steps[this.currentStepIndex]);
