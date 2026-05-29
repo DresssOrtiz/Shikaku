@@ -20,9 +20,9 @@ export class BoardGridComponent implements OnChanges {
   gridCols = 0;
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['board'] && this.board.length > 0) {
+    if (changes['board'] && this.board && this.board.length > 0) {
       this.gridRows = this.board.length;
-      this.gridCols = this.board[0].length;
+      this.gridCols = this.board[0]?.length || 0;
     }
   }
 

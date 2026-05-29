@@ -51,14 +51,21 @@ export class Demo implements OnInit, OnDestroy {
     this.isLoading = true;
     this.api.getBoards().subscribe({
       next: (res) => {
-        this.boardsMap = res.boards;
-        this.boardNames = Object.keys(this.boardsMap);
-        if (this.boardNames.length > 0) {
-          this.onBoardSelected(this.boardNames[0]);
+        console.log("Boards loaded:", res);
+        try {
+          this.boardsMap = res?.boards || {};
+          this.boardNames = Object.keys(this.boardsMap);
+          if (this.boardNames.length > 0) {
+            this.onBoardSelected(this.boardNames[0]);
+          }
+        } catch (e) {
+          console.error("Error processing boards:", e);
+          this.currentStepMessage = 'Error procesando tableros.';
         }
         this.isLoading = false;
       },
-      error: () => {
+      error: (err) => {
+        console.error("API Error loading boards:", err);
         this.isLoading = false;
         this.currentStepMessage = 'Error al cargar tableros.';
       }

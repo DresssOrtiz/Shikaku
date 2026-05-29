@@ -25,13 +25,11 @@ export class ControlPanelComponent {
   @Output() resetClicked = new EventEmitter<void>();
   @Output() speedChanged = new EventEmitter<number>();
 
-  onBoardChange(event: Event) {
-    const target = event.target as HTMLSelectElement;
-    this.boardSelected.emit(target.value);
+  onBoardChange(value: string) {
+    this.boardSelected.emit(value);
   }
 
-  onSpeedChange(event: Event) {
-    const target = event.target as HTMLSelectElement;
-    this.speedChanged.emit(Number(target.value));
+  onSpeedChange(value: number) {
+    this.speedChanged.emit(Number(value));
   }
 }
