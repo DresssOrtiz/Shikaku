@@ -94,7 +94,7 @@ export class Demo implements OnInit, OnDestroy {
     });
   }
 
-  onLoadSteps() {
+  onLoadSteps(autoPlay = false) {
     this.resetState();
     this.isLoading = true;
     this.currentStepMessage = 'Calculando y descargando pasos...';
@@ -103,6 +103,9 @@ export class Demo implements OnInit, OnDestroy {
         this.steps = res.steps;
         this.currentStepMessage = `¡${this.steps.length} pasos cargados! Presiona Play.`;
         this.isLoading = false;
+        if (autoPlay) {
+          this.startPlayback();
+        }
       },
       error: () => {
         this.isLoading = false;
@@ -112,9 +115,19 @@ export class Demo implements OnInit, OnDestroy {
   }
 
   play() {
-    if (!this.steps.length || this.isPlaying || this.currentStepIndex >= this.steps.length - 1) {
+    if (this.isPlaying || (this.steps.length > 0 && this.currentStepIndex >= this.steps.length - 1)) {
       return;
     }
+    
+    if (this.steps.length === 0) {
+      this.onLoadSteps(true);
+      return;
+    }
+
+    this.startPlayback();
+  }
+
+  private startPlayback() {
     this.isPlaying = true;
     this.currentStepMessage = 'Reproduciendo algoritmo...';
     

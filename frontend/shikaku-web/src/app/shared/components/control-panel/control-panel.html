@@ -1,7 +1,7 @@
 <div class="control-panel">
   <div class="control-group">
     <label>Tablero:</label>
-    <select [value]="selectedBoardId" (change)="onBoardChange($event)" [disabled]="isPlaying || isLoading">
+    <select [(ngModel)]="selectedBoardId" (ngModelChange)="onBoardChange($event)" [disabled]="isPlaying || isLoading">
       <option *ngFor="let board of boards" [value]="board">{{ board }}</option>
     </select>
   </div>
@@ -32,7 +32,7 @@
 
   <div class="control-group">
     <label>Velocidad:</label>
-    <select [value]="playbackSpeedMs" (change)="onSpeedChange($event)">
+    <select [(ngModel)]="playbackSpeedMs" (ngModelChange)="onSpeedChange($event)" [disabled]="isPlaying || isLoading">
       <option [value]="1000">Lento (1s)</option>
       <option [value]="500">Normal (0.5s)</option>
       <option [value]="100">Rápido (0.1s)</option>
