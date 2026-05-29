@@ -1,0 +1,48 @@
+<div class="demo-layout">
+  <header class="demo-header">
+    <h1>Demo Interactiva</h1>
+    <p>Visualiza cómo el algoritmo prueba, poda y retrocede.</p>
+  </header>
+
+  <div class="main-content">
+    <div class="left-panel">
+      <app-control-panel
+        [boards]="boardNames"
+        [selectedBoardId]="selectedBoardId"
+        [isPlaying]="isPlaying"
+        [isLoading]="isLoading"
+        [playbackSpeedMs]="playbackSpeedMs"
+        (boardSelected)="onBoardSelected($event)"
+        (solveClicked)="onSolveInstant()"
+        (stepsClicked)="onLoadSteps()"
+        (playClicked)="play()"
+        (pauseClicked)="pause()"
+        (nextClicked)="nextStep()"
+        (resetClicked)="resetState()"
+        (speedChanged)="onSpeedChanged($event)">
+      </app-control-panel>
+      
+      <div class="status-bar">
+        <h3>Paso Actual</h3>
+        <p class="status-message" [ngClass]="{'status-active': isPlaying}">
+          {{ currentStepMessage }}
+        </p>
+      </div>
+
+      <app-step-legend></app-step-legend>
+    </div>
+
+    <div class="center-panel">
+      <app-board-grid
+        [board]="currentBoard"
+        [placements]="solution"
+        [testing]="testingRectangle"
+        [errorRectangle]="errorRectangle">
+      </app-board-grid>
+    </div>
+
+    <div class="right-panel">
+      <app-metrics-panel [stats]="stats"></app-metrics-panel>
+    </div>
+  </div>
+</div>

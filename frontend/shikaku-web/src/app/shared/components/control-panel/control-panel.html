@@ -1,0 +1,42 @@
+<div class="control-panel">
+  <div class="control-group">
+    <label>Tablero:</label>
+    <select [value]="selectedBoardId" (change)="onBoardChange($event)" [disabled]="isPlaying || isLoading">
+      <option *ngFor="let board of boards" [value]="board">{{ board }}</option>
+    </select>
+  </div>
+
+  <div class="control-group buttons-main">
+    <button class="btn btn-primary" (click)="solveClicked.emit()" [disabled]="isPlaying || isLoading">
+      Resolver Instantáneo
+    </button>
+    <button class="btn btn-secondary" (click)="stepsClicked.emit()" [disabled]="isPlaying || isLoading">
+      Cargar Pasos (Demo)
+    </button>
+  </div>
+
+  <div class="control-group buttons-playback">
+    <button class="btn btn-icon" (click)="playClicked.emit()" [disabled]="isPlaying || isLoading" title="Reproducir">
+      ▶
+    </button>
+    <button class="btn btn-icon" (click)="pauseClicked.emit()" [disabled]="!isPlaying" title="Pausar">
+      ⏸
+    </button>
+    <button class="btn btn-icon" (click)="nextClicked.emit()" [disabled]="isPlaying || isLoading" title="Siguiente Paso">
+      ⏭
+    </button>
+    <button class="btn btn-icon" (click)="resetClicked.emit()" [disabled]="isLoading" title="Reiniciar">
+      🔄
+    </button>
+  </div>
+
+  <div class="control-group">
+    <label>Velocidad:</label>
+    <select [value]="playbackSpeedMs" (change)="onSpeedChange($event)">
+      <option [value]="1000">Lento (1s)</option>
+      <option [value]="500">Normal (0.5s)</option>
+      <option [value]="100">Rápido (0.1s)</option>
+      <option [value]="10">Turbo (10ms)</option>
+    </select>
+  </div>
+</div>

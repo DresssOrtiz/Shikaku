@@ -1,0 +1,13 @@
+<div class="board-container" 
+     [style.grid-template-columns]="'repeat(' + gridCols + ', 1fr)'"
+     [style.grid-template-rows]="'repeat(' + gridRows + ', 1fr)'"
+     *ngIf="gridRows > 0">
+  
+  @for (row of board; track r; let r = $index) {
+    @for (cell of row; track c; let c = $index) {
+      <div class="board-cell" [ngClass]="getCellClass(r, c)">
+        <span class="clue-text" *ngIf="cell > 0">{{ cell }}</span>
+      </div>
+    }
+  }
+</div>

@@ -1,2 +1,18 @@
+# Python
 __pycache__/
 *.pyc
+.venv/
+venv/
+
+# Node / Angular
+node_modules/
+dist/
+.angular/
+
+# Environment
+.env
+
+# OS / editor
+.DS_Store
+.vscode/
+.idea/

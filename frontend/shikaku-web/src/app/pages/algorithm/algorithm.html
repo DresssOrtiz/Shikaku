@@ -1,0 +1,102 @@
+<div class="page-wrapper">
+  <header class="section-header">
+    <h1 class="title">El <span class="neon-text">Algoritmo</span></h1>
+    <p class="subtitle">Backtracking Inteligente y Control de Estado</p>
+  </header>
+
+  <div class="content-grid">
+    
+    <div class="info-column">
+      
+      <div class="glass-panel story-panel">
+        <h2>Búsqueda en Profundidad</h2>
+        <p>
+          El núcleo de nuestro solucionador en Python es un algoritmo recursivo de <i>Backtracking</i>. Imagina un laberinto gigante: el algoritmo avanza tomando decisiones (colocando un rectángulo). Si en algún punto detecta que el camino no tiene salida, <b>retrocede</b>, deshace la última decisión en memoria y prueba un camino alternativo.
+        </p>
+        <p>
+          Pero el Backtracking puro sigue siendo computacionalmente ineficiente. Para dotarlo de inteligencia real y vencer a la explosión combinatoria, implementamos un marco heurístico estricto:
+        </p>
+      </div>
+
+      <div class="rules-container">
+        <h3 class="rules-title">Arquitectura Heurística</h3>
+        
+        <div class="rule-card">
+          <div class="rule-icon">1</div>
+          <div>
+            <p><strong>MRV (Minimum Remaining Values):</strong> <br/><em>La filosofía de "Falla rápido".</em> En lugar de resolver de izquierda a derecha, el algoritmo elige primero la pista que tiene el menor número de combinaciones posibles. Esto colapsa el árbol rápidamente.</p>
+          </div>
+        </div>
+
+        <div class="rule-card">
+          <div class="rule-icon">2</div>
+          <div>
+            <p><strong>LCV (Least Constraining Value):</strong> <br/><em>La filosofía de "Sé amable con tus vecinos".</em> Una vez elegida la pista, evalúa qué rectángulo elimina la menor cantidad de opciones para las demás pistas, maximizando las chances de éxito.</p>
+          </div>
+        </div>
+
+        <div class="rule-card">
+          <div class="rule-icon">3</div>
+          <div>
+            <p><strong>Poda Activa (Forward Checking):</strong> <br/><em>La filosofía de "Mira antes de saltar".</em> Si colocar una pieza deja a otra pista sin opciones matemáticas o deja celdas "huérfanas" imposibles de cubrir, el algoritmo cancela esa rama instantáneamente.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="visual-column">
+      <div class="interactive-showcase">
+        <div class="showcase-header">
+          <span>Simulación del Árbol de Decisiones</span>
+          <div class="pulse-dot"></div>
+        </div>
+        
+        <div class="algorithm-visualizer">
+          <div class="tree-container">
+            <div class="node root">Estado Base</div>
+            
+            <div class="branches">
+              
+              <div class="branch branch-left">
+                <div class="connector"></div>
+                <div class="node bad">Opción A</div>
+                <div class="tooltip">MRV Detecta Inviabilidad<br/><span class="cross">✖ Poda</span></div>
+              </div>
+
+              <div class="branch branch-center">
+                <div class="connector"></div>
+                <div class="node good">Opción B</div>
+                <div class="tooltip">LCV: Ruta Óptima<br/><span class="check">✔ Éxito</span></div>
+                
+                <!-- Subrama -->
+                <div class="sub-branches">
+                  <div class="branch sub-left">
+                    <div class="connector"></div>
+                    <div class="node bad">X</div>
+                  </div>
+                  <div class="branch sub-right">
+                    <div class="connector"></div>
+                    <div class="node final">Solución</div>
+                  </div>
+                </div>
+
+              </div>
+
+              <div class="branch branch-right">
+                <div class="connector"></div>
+                <div class="node bad">Opción C</div>
+                <div class="tooltip">Celda Huérfana<br/><span class="cross">✖ Forward Checking</span></div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <p class="caption">Pasa el cursor sobre el estado base para ver cómo actúan las heurísticas, cortando caminos sin salida (rojo) e iluminando la solución (verde).</p>
+
+      </div>
+    </div>
+
+  </div>
+</div>

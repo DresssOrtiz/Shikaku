@@ -1,0 +1,62 @@
+.board-container {
+  display: grid;
+  gap: 2px;
+  background-color: var(--border-glass);
+  border: 2px solid var(--border-glass);
+  border-radius: 8px;
+  padding: 4px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.board-cell {
+  background-color: rgba(255, 255, 255, 0.03);
+  aspect-ratio: 1 / 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 4px;
+  transition: background-color 0.15s ease, box-shadow 0.15s ease;
+  min-width: 40px;
+  min-height: 40px;
+}
+
+.clue-text {
+  font-weight: 800;
+  font-size: 1.2rem;
+  color: var(--text-light);
+  text-shadow: 0 0 8px rgba(255, 255, 255, 0.4);
+}
+
+.cell-empty {
+}
+
+.cell-testing {
+  background-color: rgba(0, 110, 255, 0.3);
+  box-shadow: inset 0 0 10px var(--neon-blue);
+  animation: blink 0.5s infinite alternate;
+}
+
+.cell-placed {
+  background-color: rgba(0, 255, 136, 0.15);
+  box-shadow: inset 0 0 8px var(--neon-green);
+  border: 1px solid rgba(0, 255, 136, 0.4);
+}
+
+.cell-error {
+  background-color: rgba(255, 51, 102, 0.3);
+  box-shadow: inset 0 0 10px var(--neon-red);
+  animation: shake 0.4s ease-in-out;
+}
+
+@keyframes blink {
+  from { opacity: 0.6; }
+  to { opacity: 1; }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-3px); }
+  75% { transform: translateX(3px); }
+}

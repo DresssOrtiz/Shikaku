@@ -1,0 +1,9 @@
+<div class="metrics-grid">
+  @for (metric of metrics; track metric.label) {
+    <app-metric-card 
+      [title]="metric.label" 
+      [value]="metric.value" 
+      [highlight]="metric.highlight">
+    </app-metric-card>
+  }
+</div>

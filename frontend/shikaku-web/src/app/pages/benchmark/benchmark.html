@@ -1,0 +1,49 @@
+<div class="page-container">
+  <div class="hero-content text-center">
+    <h1 class="neon-title-sm">Benchmark</h1>
+    <p class="subtitle">Prueba de Estrés del Algoritmo</p>
+  </div>
+
+  <div class="content-card">
+    <div class="benchmark-header">
+      <h2>Resultados de Ejecución Masiva</h2>
+      <button class="btn-primary" (click)="runBenchmark()" [disabled]="isLoading">
+        {{ isLoading ? 'Ejecutando...' : 'Re-ejecutar Pruebas' }}
+      </button>
+    </div>
+
+    <div *ngIf="error" class="error-msg">{{ error }}</div>
+
+    <div class="table-container" *ngIf="!isLoading && results.length > 0">
+      <table class="benchmark-table">
+        <thead>
+          <tr>
+            <th>Tablero</th>
+            <th>Tiempo (ms)</th>
+            <th>Recursiones</th>
+            <th>Backtracks</th>
+            <th>Podas (Forward)</th>
+            <th>Podas (Celdas)</th>
+            <th>Soluciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let res of results">
+            <td class="col-highlight">{{ res.boardName }}</td>
+            <td class="col-number highlight-blue">{{ res.stats.elapsed_ms | number:'1.2-2' }}</td>
+            <td class="col-number">{{ res.stats.recursive_calls }}</td>
+            <td class="col-number">{{ res.stats.backtracks }}</td>
+            <td class="col-number">{{ res.stats.forward_prunes }}</td>
+            <td class="col-number">{{ res.stats.cell_prunes }}</td>
+            <td class="col-number highlight-green">{{ res.stats.solutions_found }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div *ngIf="isLoading" class="loading-state">
+      <div class="spinner"></div>
+      <p>Resolviendo todos los tableros en el servidor...</p>
+    </div>
+  </div>
+</div>
