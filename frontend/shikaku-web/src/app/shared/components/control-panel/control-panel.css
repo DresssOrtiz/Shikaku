@@ -73,8 +73,13 @@ select option {
   box-shadow: 0 0 15px rgba(0, 110, 255, 0.5);
 }
 
-.btn-secondary:not(:disabled):hover {
+.btn-secondary:not(:disabled) {
   background: rgba(255,255,255,0.1);
+  border-color: rgba(255,255,255,0.2);
+}
+.btn-secondary:not(:disabled):hover {
+  background: rgba(255,255,255,0.2);
+  border-color: #fff;
 }
 
 .btn-icon {
@@ -85,7 +90,12 @@ select option {
   align-items: center;
   justify-content: center;
 }
-.btn-icon:not(:disabled):hover {
-  background: rgba(0, 110, 255, 0.2);
+.btn-icon:not(:disabled) {
   color: var(--neon-blue);
+  background: rgba(0, 110, 255, 0.1);
+  border-color: rgba(0, 110, 255, 0.3);
+}
+.btn-icon:not(:disabled):hover {
+  background: rgba(0, 110, 255, 0.3);
+  box-shadow: 0 0 10px rgba(0, 110, 255, 0.4);
 }
