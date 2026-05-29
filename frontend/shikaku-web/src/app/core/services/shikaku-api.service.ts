@@ -24,7 +24,7 @@ export interface BoardsResponse {
   providedIn: 'root',
 })
 export class ShikakuApiService {
-  private readonly apiUrl = '/api';
+  private readonly apiUrl = 'http://localhost:8000/api';
 
   constructor(private readonly http: HttpClient) {}
 

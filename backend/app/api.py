@@ -1,10 +1,19 @@
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import List, Optional, Any, Dict
 from app.solver import ShikakuSolver
 from app.examples import EXAMPLES
 
 app = FastAPI(title="Shikaku Solver API", root_path="/api")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 class BoardRequest(BaseModel):
     board: List[List[int]]
